@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Labs — платформа аналитики для продуктовых команд</title>
+<meta name="description" content="Nova Labs — выдуманная SaaS-компания. Единая панель метрик, эксперименты и отчёты для продуктовых команд.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --color-primary:#2563EB;
+  --color-on-primary:#FFFFFF;
+  --color-secondary:#3B82F6;
+  --color-accent:#EA580C;
+  --color-accent-hover:#C2410C;
+  --color-background:#F8FAFC;
+  --color-foreground:#1E293B;
+  --color-card:#FFFFFF;
+  --color-muted:#E9EFF8;
+  --color-muted-foreground:#475569;
+  --color-border:#E2E8F0;
+  --color-destructive:#DC2626;
+  --color-ring:#2563EB;
+
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px; --space-9:96px;
+
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.06), 0 4px 12px rgba(15,23,42,.05);
+  --shadow-lg:0 20px 50px -20px rgba(37,99,235,.35);
+  --container:1120px;
+  --header-h:68px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:calc(var(--header-h) + 16px)}
+body{
+  margin:0;
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--color-background);
+  color:var(--color-foreground);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,svg{display:block; max-width:100%}
+h1,h2,h3,h4{line-height:1.15; margin:0 0 var(--space-4); letter-spacing:-.02em}
+p{margin:0 0 var(--space-4)}
+a{color:var(--color-primary); text-decoration:none}
+a:hover{text-decoration:underline}
+ul{margin:0; padding:0; list-style:none}
+:focus-visible{outline:3px solid var(--color-ring); outline-offset:2px; border-radius:4px}
+
+.container{width:100%; max-width:var(--container); margin-inline:auto; padding-inline:var(--space-5)}
+.section{padding-block:var(--space-9)}
+.eyebrow{
+  display:inline-block; font-size:.8rem; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--color-primary);
+  background:rgba(37,99,235,.1); padding:6px 14px; border-radius:999px; margin-bottom:var(--space-4);
+}
+.section-title{font-size:clamp(1.75rem,4vw,2.5rem); font-weight:800}
+.section-lead{color:var(--color-muted-foreground); font-size:1.075rem; max-width:62ch}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:var(--space-2);
+  min-height:48px; padding:12px 26px; border-radius:999px;
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:600; line-height:1;
+  cursor:pointer; border:1px solid transparent;
+  transition:transform .2s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:var(--color-accent); color:#FFF; box-shadow:0 10px 25px -10px rgba(234,88,12,.7)}
+.btn-primary:hover{background:var(--color-accent-hover); text-decoration:none}
+.btn-secondary{background:var(--color-card); color:var(--color-foreground); border-color:var(--color-border); box-shadow:var(--shadow-sm)}
+.btn-secondary:hover{border-color:var(--color-primary); color:var(--color-primary); text-decoration:none}
+.btn-ghost{background:transparent; color:var(--color-foreground)}
+.btn-ghost:hover{background:rgba(37,99,235,.08); text-decoration:none}
+
+/* ---------- Header ---------- */
+.site-header{
+  position:sticky; top:0; z-index:50; height:var(--header-h);
+  background:rgba(248,250,252,.75); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid transparent; transition:border-color .25s ease, box-shadow .25s ease;
+}
+.site-header.is-scrolled{border-bottom-color:var(--color-border); box-shadow:0 6px 24px -18px rgba(15,23,42,.5)}
+.header-inner{display:flex; align-items:center; justify-content:space-between; gap:var(--space-4); height:var(--header-h)}
+.logo{display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.15rem; color:var(--color-foreground); letter-spacing:-.02em}
+.logo:hover{text-decoration:none}
+.logo-mark{width:34px; height:34px; flex:none}
+.nav{display:flex; align-items:center; gap:var(--space-2)}
+.nav a.link{
+  padding:8px 14px; border-radius:999px; color:var(--color-muted-foreground);
+  font-weight:500; font-size:.95rem; transition:color .2s ease, background-color .2s ease;
+}
+.nav a.link:hover{color:var(--color-foreground); background:rgba(37,99,235,.08); text-decoration:none}
+.header-actions{display:flex; align-items:center; gap:var(--space-3)}
+.burger{
+  display:none; width:44px; height:44px; align-items:center; justify-content:center;
+  background:transparent; border:1px solid var(--color-border); border-radius:12px; cursor:pointer;
+}
+.burger svg{width:22px; height:22px}
+.mobile-menu{
+  display:none; position:fixed; inset:var(--header-h) 0 auto 0; z-index:49;
+  background:rgba(248,250,252,.97); backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--color-border); padding:var(--space-5);
+}
+.mobile-menu.open{display:block}
+.mobile-menu a{
+  display:block; padding:14px 8px; font-weight:600; color:var(--color-foreground);
+  border-bottom:1px solid var(--color-border);
+}
+.mobile-menu a:last-of-type{border-bottom:none}
+.mobile-menu .btn{width:100%; margin-top:var(--space-4)}
+
+/* ---------- Hero ---------- */
+.hero{position:relative; padding-block:clamp(56px,9vw,110px); overflow:hidden}
+.blob{position:absolute; border-radius:50%; filter:blur(70px); opacity:.55; pointer-events:none; z-index:0}
+.blob-1{width:420px; height:420px; background:#93C5FD; top:-140px; right:-100px}
+.blob-2{width:340px; height:340px; background:#FDBA74; bottom:-160px; left:-120px; opacity:.4}
+.hero-grid{position:relative; z-index:1; display:grid; grid-template-columns:1.05fr .95fr; gap:var(--space-8); align-items:center}
+.hero h1{font-size:clamp(2.2rem,5.2vw,3.6rem); font-weight:800}
+.hero h1 em{font-style:normal; color:var(--color-primary); position:relative; white-space:nowrap}
+.hero h1 em::after{
+  content:""; position:absolute; left:0; right:0; bottom:2px; height:10px;
+  background:rgba(234,88,12,.28); border-radius:6px; z-index:-1;
+}
+.hero p.lead{font-size:1.15rem; color:var(--color-muted-foreground); max-width:52ch}
+.hero-cta{display:flex; flex-wrap:wrap; gap:var(--space-3); margin-top:var(--space-6)}
+.hero-note{display:flex; align-items:center; gap:8px; margin-top:var(--space-4); font-size:.9rem; color:var(--color-muted-foreground)}
+.hero-note svg{width:18px; height:18px; color:#16A34A; flex:none}
+
+/* Glass dashboard mock */
+.glass-card{
+  background:rgba(255,255,255,.62); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.75); border-radius:var(--radius);
+  box-shadow:var(--shadow-lg), var(--shadow-sm); padding:var(--space-5);
+}
+.dash-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--space-5)}
+.dash-top h3{margin:0; font-size:1rem; font-weight:700}
+.pill{font-size:.75rem; font-weight:700; padding:5px 12px; border-radius:999px; background:rgba(37,99,235,.12); color:var(--color-primary)}
+.chart{display:flex; align-items:flex-end; gap:10px; height:140px; margin-bottom:var(--space-5)}
+.bar{flex:1; border-radius:8px 8px 4px 4px; background:linear-gradient(180deg,var(--color-secondary),var(--color-primary)); transform-origin:bottom; animation:grow .9s cubic-bezier(.22,1,.36,1) backwards}
+.bar:nth-child(even){background:linear-gradient(180deg,#FDBA74,var(--color-accent))}
+@keyframes grow{from{transform:scaleY(.05); opacity:.3} to{transform:scaleY(1); opacity:1}}
+.dash-metrics{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-3)}
+.metric{background:rgba(255,255,255,.7); border:1px solid var(--color-border); border-radius:var(--radius-sm); padding:var(--space-3)}
+.metric b{display:block; font-size:1.3rem; letter-spacing:-.02em}
+.metric span{font-size:.78rem; color:var(--color-muted-foreground)}
+
+/* ---------- Stats ---------- */
+.stats{border-block:1px solid var(--color-border); background:#FFF}
+.stats-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-5); text-align:center}
+.stat b{display:block; font-size:clamp(1.8rem,3.5vw,2.6rem); font-weight:800; color:var(--color-primary); letter-spacing:-.03em}
+.stat span{color:var(--color-muted-foreground); font-size:.95rem}
+
+/* ---------- Features ---------- */
+.features-head{max-width:720px; margin-bottom:var(--space-7)}
+.features-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--space-5)}
+.feature{
+  background:var(--color-card); border:1px solid var(--color-border); border-radius:var(--radius);
+  padding:var(--space-6); box-shadow:var(--shadow-sm);
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.feature:hover{transform:translateY(-6px); border-color:rgba(37,99,235,.4); box-shadow:0 24px 45px -25px rgba(37,99,235,.5)}
+.feature-icon{
+  width:52px; height:52px; border-radius:14px; display:grid; place-items:center;
+  background:rgba(37,99,235,.1); color:var(--color-primary); margin-bottom:var(--space-4);
+}
+.feature-icon svg{width:26px; height:26px}
+.feature:nth-child(2) .feature-icon{background:rgba(234,88,12,.12); color:var(--color-accent)}
+.feature:nth-child(4) .feature-icon{background:rgba(234,88,12,.12); color:var(--color-accent)}
+.feature h3{font-size:1.2rem; font-weight:700}
+.feature p{color:var(--color-muted-foreground); margin:0; font-size:.98rem}
+
+/* ---------- Steps ---------- */
+.steps{background:var(--color-muted); border-block:1px solid var(--color-border)}
+.steps-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5); margin-top:var(--space-7)}
+.step{background:rgba(255,255,255,.7); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.9); border-radius:var(--radius); padding:var(--space-6); position:relative}
+.step-num{
+  width:40px; height:40px; border-radius:50%; display:grid; place-items:center;
+  background:var(--color-primary); color:#FFF; font-weight:800; margin-bottom:var(--space-4);
+}
+.step h3{font-size:1.1rem}
+.step p{margin:0; color:var(--color-muted-foreground); font-size:.96rem}
+
+/* ---------- CTA / form ---------- */
+.cta-band{padding-block:var(--space-9)}
+.cta-card{
+  position:relative; overflow:hidden; border-radius:24px; padding:clamp(32px,6vw,64px);
+  background:linear-gradient(135deg,#1D4ED8 0%,#2563EB 45%,#3B82F6 100%); color:#FFF;
+  box-shadow:0 30px 60px -30px rgba(29,78,216,.8);
+}
+.cta-card::after{
+  content:""; position:absolute; width:320px; height:320px; border-radius:50%;
+  background:rgba(255,255,255,.12); top:-120px; right:-80px;
+}
+.cta-card h2{font-size:clamp(1.6rem,3.5vw,2.3rem); font-weight:800; position:relative; z-index:1}
+.cta-card p{color:rgba(255,255,255,.85); max-width:52ch; position:relative; z-index:1}
+.subscribe{position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:var(--space-3); margin-top:var(--space-5); max-width:560px}
+.field{flex:1 1 260px}
+.field input{
+  width:100%; min-height:48px; padding:12px 18px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.45); background:rgba(255,255,255,.14);
+  color:#FFF; font:500 1rem 'Plus Jakarta Sans',sans-serif;
+}
+.field input::placeholder{color:rgba(255,255,255,.7)}
+.field input:focus-visible{outline:3px solid #FDE68A; outline-offset:2px}
+.field input[aria-invalid="true"]{border-color:#FECACA; background:rgba(220,38,38,.25)}
+.form-msg{min-height:22px; margin-top:var(--space-3); font-size:.92rem; font-weight:600; position:relative; z-index:1}
+.form-msg.error{color:#FEE2E2}
+.form-msg.success{color:#BBF7D0}
+.cta-list{display:flex; flex-wrap:wrap; gap:var(--space-4); margin-top:var(--space-5); position:relative; z-index:1; font-size:.92rem; color:rgba(255,255,255,.9)}
+.cta-list li{display:flex; align-items:center; gap:8px}
+.cta-list svg{width:17px; height:17px; flex:none}
+
+/* ---------- Footer ---------- */
+.site-footer{border-top:1px solid var(--color-border); background:#FFF; padding-block:var(--space-7) var(--space-5)}
+.footer-grid{display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:var(--space-6)}
+.footer-brand p{color:var(--color-muted-foreground); font-size:.94rem; max-width:34ch}
+.footer-col h4{font-size:.85rem; text-transform:uppercase; letter-spacing:.08em; color:var(--color-muted-foreground); margin-bottom:var(--space-3)}
+.footer-col li{margin-bottom:8px}
+.footer-col a{color:var(--color-foreground); font-size:.95rem}
+.footer-col a:hover{color:var(--color-primary)}
+.footer-bottom{
+  margin-top:var(--space-6); padding-top:var(--space-4); border-top:1px solid var(--color-border);
+  display:flex; flex-wrap:wrap; gap:var(--space-3); justify-content:space-between;
+  font-size:.88rem; color:var(--color-muted-foreground);
+}
+
+/* ---------- Reveal ---------- */
+.reveal{opacity:0; transform:translateY(26px); transition:opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1; transform:none}
+
+/* ---------- Responsive ---------- */
+@media (max-width:960px){
+  .hero-grid{grid-template-columns:1fr; gap:var(--space-7)}
+  .features-grid,.steps-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr); gap:var(--space-6)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .nav,.header-actions .btn{display:none}
+  .burger{display:inline-flex}
+}
+@media (max-width:520px){
+  .section{padding-block:var(--space-8)}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .hero-cta .btn{width:100%}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important}
+  .reveal{opacity:1; transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a class="logo" href="#top" aria-label="Nova Labs — на главную">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <rect width="40" height="40" rx="12" fill="#2563EB"/>
+        <path d="M12 27V13l16 14V13" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Nova Labs
+    </a>
+
+    <nav class="nav" aria-label="Основная навигация">
+      <a class="link" href="#features">Возможности</a>
+      <a class="link" href="#how">Как это работает</a>
+      <a class="link" href="#stats">Результаты</a>
+      <a class="link" href="#cta">Контакты</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="btn btn-primary" href="#cta">Попробовать</a>
+      <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <a href="#features">Возможности</a>
+  <a href="#how">Как это работает</a>
+  <a href="#stats">Результаты</a>
+  <a href="#cta">Контакты</a>
+  <a class="btn btn-primary" href="#cta">Попробовать бесплатно</a>
+</div>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="blob blob-1" aria-hidden="true"></div>
+    <div class="blob blob-2" aria-hidden="true"></div>
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Продуктовая аналитика</span>
+        <h1>Все метрики продукта — <em>в одном окне</em></h1>
+        <p class="lead">Nova Labs собирает события, считает воронки и запускает A/B-тесты без помощи аналитика. Команда видит, что работает, уже в первый день.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#cta">Начать бесплатно</a>
+          <a class="btn btn-secondary" href="#features">Посмотреть возможности</a>
+        </div>
+        <p class="hero-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          14 дней бесплатно, карта не нужна
+        </p>
+      </div>
+
+      <div class="glass-card" aria-hidden="true">
+        <div class="dash-top">
+          <h3>Активность пользователей</h3>
+          <span class="pill">+18% за неделю</span>
+        </div>
+        <div class="chart">
+          <div class="bar" style="height:45%; animation-delay:.05s"></div>
+          <div class="bar" style="height:62%; animation-delay:.12s"></div>
+          <div class="bar" style="height:38%; animation-delay:.19s"></div>
+          <div class="bar" style="height:78%; animation-delay:.26s"></div>
+          <div class="bar" style="height:55%; animation-delay:.33s"></div>
+          <div class="bar" style="height:92%; animation-delay:.4s"></div>
+          <div class="bar" style="height:70%; animation-delay:.47s"></div>
+        </div>
+        <div class="dash-metrics">
+          <div class="metric"><b>24 810</b><span>DAU</span></div>
+          <div class="metric"><b>6,4%</b><span>Конверсия</span></div>
+          <div class="metric"><b>1,2 с</b><span>Отклик</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats section" id="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat reveal"><b data-count="1250" data-suffix="+">0</b><span>команд на платформе</span></div>
+        <div class="stat reveal"><b data-count="42" data-suffix=" млн">0</b><span>событий в месяц</span></div>
+        <div class="stat reveal"><b data-count="99" data-suffix=",9%">0</b><span>аптайм сервиса</span></div>
+        <div class="stat reveal"><b data-count="12" data-suffix=" мин">0</b><span>до первого отчёта</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="features-head reveal">
+        <span class="eyebrow">Возможности</span>
+        <h2 class="section-title">Инструменты, которые закрывают день продукта</h2>
+        <p class="section-lead">Никаких SQL-запросов и согласований: всё, что нужно продакт-менеджеру и дизайнеру, уже в интерфейсе.</p>
+      </div>
+
+      <div class="features-grid">
+        <article class="feature reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/>
+            </svg>
+          </div>
+          <h3>Живые дашборды</h3>
+          <p>Перетащите виджет — и получите график по DAU,Retention или выручке. Обновление данных каждые 30 секунд.</p>
+        </article>
+
+        <article class="feature reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <h3>A/B-эксперименты</h3>
+          <p>Запускайте варианты экранов в один клик, а система сама остановит тест при статистической значимости.</p>
+        </article>
+
+        <article class="feature reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="17" r="3"/>
+            </svg>
+          </div>
+          <h3>Воронки и когорты</h3>
+          <p>Соберите путь пользователя из событий и увидите, на каком шаге теряются 80% клиентов — без разработчиков.</p>
+        </article>
+
+        <article class="feature reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+            </svg>
+          </div>
+          <h3>Приватность по умолчанию</h3>
+          <p>Хранение данных в ЕС, шифрование AES-256 и авто-анонимизация персональных полей. GDPR из коробки.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEPS -->
+  <section class="steps section" id="how">
+    <div class="container">
+      <div class="reveal" style="max-width:680px">
+        <span class="eyebrow">Как это работает</span>
+        <h2 class="section-title">Три шага до первого инсайта</h2>
+        <p class="section-lead">Настройка занимает меньше времени, чем кофе-брейк.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <h3>Подключите источник</h3>
+          <p>Одна строка JavaScript, SDK для iOS и Android или готовые интеграции с 40+ сервисами.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">2</div>
+          <h3>Опишите события</h3>
+          <p>Конструктор событий без кода: отмечайте клики прямо в интерфейсе вашего продукта.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">3</div>
+          <h3>Получайте решения</h3>
+          <p>Готовые отчёты и алерты в Slack подсказывают, что улучшить в этой неделе.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band" id="cta">
+    <div class="container">
+      <div class="cta-card reveal">
+        <h2>Попробуйте Nova Labs на своих данных</h2>
+        <p>Оставьте рабочую почту — пришлём ссылку на демо-пространство с тестовыми данными вашего сегмента.</p>
+
+        <form class="subscribe" id="subscribeForm" novalidate>
+          <div class="field">
+            <label class="sr-only" for="email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Рабочая почта</label>
+            <input type="email" id="email" name="email" placeholder="you@company.com" autocomplete="email" aria-describedby="formMsg" required>
+          </div>
+          <button class="btn btn-primary" type="submit">Получить доступ</button>
+        </form>
+        <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+
+        <ul class="cta-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            Без кредитной карты
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            Отмена в любой момент
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            Поддержка 24/7
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="#top" aria-label="Nova Labs — на главную">
+          <svg class="logo-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <rect width="40" height="40" rx="12" fill="#2563EB"/>
+            <path d="M12 27V13l16 14V13" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Nova Labs
+        </a>
+        <p>Выдуманная компания, созданная как демонстрация одностраничного сайта на чистых HTML, CSS и JavaScript.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Продукт</h4>
+        <ul>
+          <li><a href="#features">Возможности</a></li>
+          <li><a href="#how">Интеграции</a></li>
+          <li><a href="#cta">Тарифы</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Компания</h4>
+        <ul>
+          <li><a href="#stats">О нас</a></li>
+          <li><a href="#cta">Вакансии</a></li>
+          <li><a href="#cta">Блог</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Поддержка</h4>
+        <ul>
+          <li><a href="#cta">Документация</a></li>
+          <li><a href="#cta">Статус</a></li>
+          <li><a href="mailto:hello@novalabs.example">hello@novalabs.example</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> Nova Labs. Все права защищены.</span>
+      <span>Политика конфиденциальности · Условия использования</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Sticky header state */
+  var header = document.getElementById('siteHeader');
+  var onScroll = function () {
+    header.classList.toggle('is-scrolled', window.scrollY > 8);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* Mobile menu */
+  var burger = document.getElementById('burger');
+  var menu = document.getElementById('mobileMenu');
+
+  function setMenu(open) {
+    menu.classList.toggle('open', open);
+    menu.hidden = !open;
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+  }
+
+  burger.addEventListener('click', function () {
+    setMenu(menu.hidden);
+  });
+
+  menu.addEventListener('click', function (e) {
+    if (e.target.closest('a')) setMenu(false);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !menu.hidden) {
+      setMenu(false);
+      burger.focus();
+    }
+  });
+
+  /* Reveal on scroll */
+  var revealItems = document.querySelectorAll('.reveal');
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    revealItems.forEach(function (el) { el.classList.add('visible'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    revealItems.forEach(function (el) { io.observe(el); });
+  }
+
+  /* Animated counters */
+  var counters = document.querySelectorAll('[data-count]');
+
+  function animateCounter(el) {
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    var suffix = el.getAttribute('data-suffix') || '';
+    if (reduceMotion) {
+      el.textContent = target.toLocaleString('ru-RU') + suffix;
+      return;
+    }
+    var duration = 1400;
+    var start = null;
+    function tick(ts) {
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(target * eased).toLocaleString('ru-RU') + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    counters.forEach(animateCounter);
+  } else {
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          cio.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    counters.forEach(function (el) { cio.observe(el); });
+  }
+
+  /* Subscribe form validation */
+  var form = document.getElementById('subscribeForm');
+  var email = document.getElementById('email');
+  var msg = document.getElementById('formMsg');
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  function showError(text) {
+    msg.textContent = text;
+    msg.className = 'form-msg error';
+    email.setAttribute('aria-invalid', 'true');
+    email.focus();
+  }
+
+  email.addEventListener('input', function () {
+    if (email.getAttribute('aria-invalid') === 'true' && EMAIL_RE.test(email.value.trim())) {
+      email.removeAttribute('aria-invalid');
+      msg.textContent = '';
+      msg.className = 'form-msg';
+    }
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var value = email.value.trim();
+    if (!value) {
+      showError('Введите почту, пожалуйста.');
+      return;
+    }
+    if (!EMAIL_RE.test(value)) {
+      showError('Похоже, в адресе опечатка. Формат: name@company.com');
+      return;
+    }
+    email.removeAttribute('aria-invalid');
+    msg.textContent = 'Готово! Письмо со ссылкой отправлено на ' + value;
+    msg.className = 'form-msg success';
+    form.reset();
+  });
+
+  /* Footer year */
+  document.getElementById('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
